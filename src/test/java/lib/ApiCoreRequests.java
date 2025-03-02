@@ -22,7 +22,7 @@ public class ApiCoreRequests {
 
     }
 
-    @Step("Make GET-requset with token")
+    @Step("Make GET-request with token")
     public Response makeGetRequestWithToken(String url, String token) {
         return given()
                 .filter(new AllureRestAssured())
@@ -32,7 +32,7 @@ public class ApiCoreRequests {
 
     }
 
-    @Step("Make GET-requset with token")
+    @Step("Make GET-request with cookie")
     public Response makeGetRequestWithCookie(String url, String cookie) {
         return given()
                 .filter(new AllureRestAssured())
