@@ -43,8 +43,8 @@ public class ApiCoreRequests {
     }
 
 
-    @Step("Make POST-request on AUTH method")
-    public Response makePostAuthRequest(String url, Map<String, String> userData) {
+    @Step("Make POST-request")
+    public Response makePostRequest(String url, Map<String, String> userData) {
         return given()
                 .filter(new AllureRestAssured())
                 .body(userData)
@@ -53,16 +53,6 @@ public class ApiCoreRequests {
 
     }
 
-
-    @Step("Make POST-request on USER method")
-    public Response makePostUserRequest(String url, Map<String, String> userData) {
-        return given()
-                .filter(new AllureRestAssured())
-                .body(userData)
-                .post(url)
-                .andReturn();
-
-    }
 
 
 
