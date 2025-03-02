@@ -53,6 +53,18 @@ public class ApiCoreRequests {
 
     }
 
+    @Step("Make PUT-request")
+    public Response makePutRequest(String url, String token, String cookie, Map<String, String> userData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header(new Header("x-csrf-token", token))
+                .cookie("auth_sid", cookie)
+                .body(userData)
+                .put(url)
+                .andReturn();
+
+    }
+
 
 
 
