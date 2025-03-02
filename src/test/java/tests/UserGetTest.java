@@ -32,7 +32,7 @@ public class UserGetTest extends BaseTestCase {
     public void testGetUserDataNoAuth() {
 
         Response responseUserData = apiCoreRequests
-                .makeGetRequest(userUrl + testUserId, "0", "0");
+                .makeGetRequest(userUrl + testUserId, null, null);
 
         String[] unexpectedFields = {"email", "firstName", "lastName"};
 
