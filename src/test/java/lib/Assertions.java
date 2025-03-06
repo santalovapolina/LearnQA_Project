@@ -4,8 +4,7 @@ import io.restassured.response.Response;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,15 +42,17 @@ public class Assertions {
     public static void assertJsonHasFields(Response Response, String[] expectedFields) {
 
         for (String fieldName : expectedFields) {
-         Response.then().assertThat().body("$", hasKey(fieldName));
+            Response.then().assertThat().body("$", hasKey(fieldName));
         }
 
     }
+
     public static void assertJsonHasNotFields(Response Response, String[] unexpectedFields) {
         for (String fieldName : unexpectedFields) {
             Response.then().assertThat().body("$", not(hasKey(fieldName)));
         }
     }
+
     public static void assertJsonByName(Response Response, String name, String expectedValue) {
         Response.then().assertThat().body("$", hasKey(name));
 
@@ -60,6 +61,12 @@ public class Assertions {
         assertEquals(expectedValue, value, "JSON value is not equal to expected value");
 
 
+    }
+
+
+    public static void assertInvalidLoginResponse(Response response, String expectedAnswer) {
+        response.then().assertThat()
+                .body(containsString(expectedAnswer));
     }
 
 
