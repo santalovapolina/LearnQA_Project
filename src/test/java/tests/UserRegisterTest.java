@@ -1,13 +1,12 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import io.restassured.response.Response;
 import lib.BaseTestCase;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import lib.DataGenerator;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,6 +25,8 @@ public class UserRegisterTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
     @Description("This test checks unsuccessful registration with existing email")
     @DisplayName("Test negative repeated registration")
 
@@ -45,6 +46,9 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.BLOCKER)
+    @Tag("Regress")
+    @Tag("Smoke")
     @Description("This test checks successful registration with new email")
     @DisplayName("Test positive registration")
 
@@ -60,6 +64,8 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test checks unsuccessful registration w/o '@' in url")
     @DisplayName("Test negative registration with invalid email format")
 
@@ -79,6 +85,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     }
 
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
     @Description("This test checks unsuccessful registration w/o one of required fields")
     @DisplayName("Test negative registration with missing field:")
     @ParameterizedTest
@@ -96,6 +104,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     }
 
+    @Severity(SeverityLevel.MINOR)
+    @Tag("Regress")
     @Description("This test checks unsuccessful registration with short name in required fields")
     @DisplayName("Test negative short:")
     @ParameterizedTest
@@ -113,6 +123,8 @@ public class UserRegisterTest extends BaseTestCase {
 
     }
 
+    @Severity(SeverityLevel.MINOR)
+    @Tag("Regress")
     @Description("This test checks unsuccessful registration with long name in required fields")
     @DisplayName("Test negative long:")
     @ParameterizedTest

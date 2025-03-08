@@ -1,15 +1,13 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
-
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -26,6 +24,9 @@ public class UserEditTest extends BaseTestCase {
     String loginUrl = "https://playground.learnqa.ru/api/user/login";
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
+    @Tag("Smoke")
     @Description("This test check successful new user editing")
     @DisplayName("Test positive editing new user")
     public void testEditJustCreatedUser() {
@@ -68,6 +69,8 @@ public class UserEditTest extends BaseTestCase {
 
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
     @Description("This test verifies the response text for unauthorized editing")
     @DisplayName("Test negative editing user unauthorized")
     public void testEditUserWhenUnauthorized() {
@@ -95,6 +98,8 @@ public class UserEditTest extends BaseTestCase {
 
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
     @Description("This test verifies the response text for editing another user data")
     @DisplayName("Test negative editing another user")
     public void testEditUserWhenAuthorizedAsAnotherUser() {
@@ -141,6 +146,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test verifies the response text for invalid email format")
     @DisplayName("Test negative editing with invalid email value")
     public void testEditUserWithInvalidEmailFormat() {
@@ -178,6 +185,8 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test verifies the response text for short firstName")
     @DisplayName("Test negative editing with short firstName")
     public void testEditUserWithShortName() {

@@ -1,14 +1,13 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -31,6 +30,8 @@ public class UserDeleteTest extends BaseTestCase {
     int userId;
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test verifies the response when deleting reserved user")
     @DisplayName("Unsuccessful deletion of reserved user")
     public void testUnsuccessfulDeleteReservedUser() {
@@ -57,6 +58,9 @@ public class UserDeleteTest extends BaseTestCase {
 
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Smoke")
+    @Tag("Regress")
     @Description("This test verifies that a newly created user can be successfully deleted and cannot authorize after deletion")
     @DisplayName("Successful deletion of newly created user and login attempt verification")
     public void testSuccessfulDeleteJustCreatedUser() {
@@ -94,7 +98,10 @@ public class UserDeleteTest extends BaseTestCase {
 
     }
 
+
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
     @Description("This test verifies the response when deleting user authorized as another")
     @DisplayName("Unsuccessful deletion of unauthorized user")
     public void testDeleteUserAuthorizedAsAnother() {

@@ -1,14 +1,13 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -27,6 +26,8 @@ public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test verifies the response fields when a user is not authorized")
     @DisplayName("Unauthorized user response verification")
     public void testGetUserDataNoAuth() {
@@ -42,6 +43,9 @@ public class UserGetTest extends BaseTestCase {
 
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
+    @Tag("Regress")
+    @Tag("Smoke")
     @Description("This test verifies the response fields when a user is authorized as themselves")
     @DisplayName("Authorized user response verification (same user)")
     public void testGetUserDataAuthAsSameUser() {
@@ -69,6 +73,8 @@ public class UserGetTest extends BaseTestCase {
 
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
     @Description("This test verifies the response fields when a user is authorized as a different user")
     @DisplayName("Authorized user response verification (different user)")
     public void testGetUserDataAuthAsAnotherUser() {

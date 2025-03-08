@@ -1,17 +1,16 @@
 package tests;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.BaseTestCase;
 import lib.ApiCoreRequests;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import java.util.HashMap;
 import java.util.Map;
 import lib.Assertions;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
 
 @Epic("Authorization cases")
@@ -46,6 +45,9 @@ public class UserAuthTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.BLOCKER)
+    @Tag("Regress")
+    @Tag("Smoke")
     @Description("This test verifies successful user authorization with valid credentials")
     @DisplayName("Test positive auth user")
     public void testUserAuth() {
@@ -60,6 +62,9 @@ public class UserAuthTest extends BaseTestCase {
 
     @Description("This test checks unauthorized access when either auth cookie or auth header is missing")
     @DisplayName("Test negative auth user with one of auth param")
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("Regress")
+    @Tag("Smoke")
     @ParameterizedTest
     @ValueSource(strings = {"cookie", "headers"})
     public void testNegativeAuthUser(String condition) {
