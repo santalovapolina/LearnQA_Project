@@ -1,10 +1,8 @@
 package tests;
 
 import io.qameta.allure.*;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -12,23 +10,15 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static lib.Constants.*;
+
 @Epic("Get user data cases")
 @Feature("Getting user data")
 public class UserGetTest extends BaseTestCase {
 
     int testUserId = 2;
 
-    String userUrl = "https://playground.learnqa.ru/api/user/";
-
-    String loginUrl = "https://playground.learnqa.ru/api/user/login";
-
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
-
-
-    @BeforeEach
-    public void setUp() {
-        RestAssured.baseURI = Constants.URLtest;
-    }
 
     @Test
     @Severity(SeverityLevel.NORMAL)
@@ -38,7 +28,7 @@ public class UserGetTest extends BaseTestCase {
     public void testGetUserDataNoAuth() {
 
         Response responseUserData = apiCoreRequests
-                .makeGetRequest(userUrl + testUserId, null, null);
+                .makeGetRequest(DEV_BASE_URL + USER_ENDPOINT + testUserId, null, null);
 
         String[] unexpectedFields = {"email", "firstName", "lastName"};
 
@@ -60,14 +50,14 @@ public class UserGetTest extends BaseTestCase {
         authData.put("password", "1234");
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest(loginUrl, authData);
+                makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
         String cookie = this.getCookie(responseGetAuth, "auth_sid");
 
 
         Response responseUserData = apiCoreRequests
-                .makeGetRequest(userUrl + testUserId, header, cookie);
+                .makeGetRequest(DEV_BASE_URL + USER_ENDPOINT + testUserId, header, cookie);
 
         String[] expectedFields = {"email", "username", "firstName", "lastName"};
 
@@ -88,7 +78,7 @@ public class UserGetTest extends BaseTestCase {
         Map<String, String> userData = DataGenerator.getRegistrationData();
 
         Response response = apiCoreRequests
-                .makePostRequest(userUrl, userData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, userData);
 
         String userId = response.jsonPath().get("id");
 
@@ -98,13 +88,13 @@ public class UserGetTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests
-                .makePostRequest(loginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
         String cookie = this.getCookie(responseGetAuth, "auth_sid");
 
         Response responseUserData = apiCoreRequests
-                .makeGetRequest(userUrl + testUserId, header, cookie);
+                .makeGetRequest(DEV_BASE_URL + USER_ENDPOINT + testUserId, header, cookie);
 
         String[] unexpectedFields = {"email", "firstName", "lastName"};
         Assertions.assertJsonHasNotFields(responseUserData, unexpectedFields);

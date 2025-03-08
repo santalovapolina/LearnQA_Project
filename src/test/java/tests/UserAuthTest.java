@@ -1,4 +1,5 @@
 package tests;
+
 import io.qameta.allure.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -9,8 +10,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import lib.Assertions;
 import org.junit.jupiter.api.DisplayName;
 
@@ -27,11 +30,6 @@ public class UserAuthTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @BeforeEach
-    public void setUp() {
-        RestAssured.baseURI = URLtest;
-    }
-
-    @BeforeEach
     public void loginUser() {
 
         Map<String, String> authData = new HashMap<>();
@@ -39,7 +37,7 @@ public class UserAuthTest extends BaseTestCase {
         authData.put("password", "1234");
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         this.cookie = this.getCookie(responseAuthData, "auth_sid");
         this.headers = this.getHeader(responseAuthData, "x-csrf-token");
@@ -56,7 +54,7 @@ public class UserAuthTest extends BaseTestCase {
     public void testUserAuth() {
 
         Response responseCheckAuth = apiCoreRequests
-                .makeGetRequest(URLtest + APIDEVAuthUrl, this.headers, this.cookie);
+                .makeGetRequest(DEV_BASE_URL + AUTH_ENDPOINT, this.headers, this.cookie);
 
         Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userId);
 
@@ -73,10 +71,10 @@ public class UserAuthTest extends BaseTestCase {
     public void testNegativeAuthUser(String condition) {
 
         if (condition.equals("cookie")) {
-            Response responseCookie = apiCoreRequests.makeGetRequestWithCookie(URLtest + APIDEVAuthUrl, this.cookie);
+            Response responseCookie = apiCoreRequests.makeGetRequestWithCookie(DEV_BASE_URL + AUTH_ENDPOINT, this.cookie);
             Assertions.assertJsonByName(responseCookie, "user_id", 0);
         } else if (condition.equals("headers")) {
-            Response responseHeaders = apiCoreRequests.makeGetRequestWithToken(URLtest + APIDEVAuthUrl, this.headers);
+            Response responseHeaders = apiCoreRequests.makeGetRequestWithToken(DEV_BASE_URL + AUTH_ENDPOINT, this.headers);
             Assertions.assertJsonByName(responseHeaders, "user_id", 0);
         } else {
             throw new IllegalArgumentException(condition);

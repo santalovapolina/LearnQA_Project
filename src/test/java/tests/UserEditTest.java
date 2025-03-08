@@ -1,10 +1,8 @@
 package tests;
 
 import io.qameta.allure.*;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import lib.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,10 +18,6 @@ public class UserEditTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
-    @BeforeEach
-    public void setUp() {
-        RestAssured.baseURI = Constants.URLtest;
-    }
 
     @Test
     @Severity(SeverityLevel.CRITICAL)
@@ -37,7 +31,7 @@ public class UserEditTest extends BaseTestCase {
         userData = DataGenerator.getRegistrationData(userData);
 
         Response response = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, userData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, userData);
 
         String userId = response.jsonPath().get("id");
 
@@ -48,7 +42,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseAuthData, "x-csrf-token");
         String cookie = this.getCookie(responseAuthData, "auth_sid");
@@ -58,12 +52,12 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
         Response responseEditUser = apiCoreRequests
-                .makePutRequest(URLtest + APIDEVUserUrl + userId, header, cookie, editData);
+                .makePutRequest(DEV_BASE_URL + USER_ENDPOINT + userId, header, cookie, editData);
 
 
         //Получить информацию о пользователе
         Response responseUserData = apiCoreRequests
-                .makeGetRequest(URLtest + APIDEVUserUrl + userId, header, cookie);
+                .makeGetRequest(DEV_BASE_URL + USER_ENDPOINT + userId, header, cookie);
 
         Assertions.assertJsonByName(responseUserData, "firstName", newName);
 
@@ -82,7 +76,7 @@ public class UserEditTest extends BaseTestCase {
         userData = DataGenerator.getRegistrationData(userData);
 
         Response response = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, userData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, userData);
 
         String userId = response.jsonPath().get("id");
 
@@ -91,7 +85,7 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
         Response responseEditUser = apiCoreRequests
-                .makePutRequest(URLtest + APIDEVUserUrl + userId, null, null, editData);
+                .makePutRequest(DEV_BASE_URL + USER_ENDPOINT + userId, null, null, editData);
 
         Assertions.assertJsonHasField(responseEditUser, "error");
         Assertions.assertJsonByName(responseEditUser, "error", "Auth token not supplied");
@@ -111,7 +105,7 @@ public class UserEditTest extends BaseTestCase {
         firstUserData = DataGenerator.getRegistrationData(firstUserData);
 
         Response responseFirstUser = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, firstUserData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, firstUserData);
 
         String firstUserId = responseFirstUser.jsonPath().get("id");
 
@@ -120,7 +114,7 @@ public class UserEditTest extends BaseTestCase {
         secondUserData = DataGenerator.getRegistrationData(secondUserData);
 
         Response responseSecondUser = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, secondUserData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, secondUserData);
 
         String secondUserId = responseSecondUser.jsonPath().get("id");
 
@@ -131,7 +125,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", firstUserData.get("password"));
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseAuthData, "x-csrf-token");
         String cookie = this.getCookie(responseAuthData, "auth_sid");
@@ -141,7 +135,9 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
         Response responseEditUser = apiCoreRequests
-                .makePutRequest(URLtest + APIDEVUserUrl + secondUserId, header, cookie, editData);
+                .makePutRequest(DEV_BASE_URL + USER_ENDPOINT + secondUserId, header, cookie, editData);
+
+//        System.out.println(responseEditUser.asPrettyString());
 
         Assertions.assertJsonHasField(responseEditUser, "error");
         Assertions.assertJsonByName(responseEditUser, "error", "This user can only edit their own data.");
@@ -158,7 +154,7 @@ public class UserEditTest extends BaseTestCase {
         userData = DataGenerator.getRegistrationData(userData);
 
         Response response = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, userData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, userData);
 
         String userId = response.jsonPath().get("id");
 
@@ -169,7 +165,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseAuthData, "x-csrf-token");
         String cookie = this.getCookie(responseAuthData, "auth_sid");
@@ -179,7 +175,7 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("email", newEmail);
         Response responseEditUser = apiCoreRequests
-                .makePutRequest(URLtest + APIDEVUserUrl + userId, header, cookie, editData);
+                .makePutRequest(DEV_BASE_URL + USER_ENDPOINT + userId, header, cookie, editData);
 
         Assertions.assertJsonHasField(responseEditUser, "error");
         Assertions.assertJsonByName(responseEditUser, "error", "Invalid email format");
@@ -197,7 +193,7 @@ public class UserEditTest extends BaseTestCase {
         userData = DataGenerator.getRegistrationData(userData);
 
         Response response = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVUserUrl, userData);
+                .makePostRequest(DEV_BASE_URL + USER_ENDPOINT, userData);
 
         String userId = response.jsonPath().get("id");
 
@@ -208,7 +204,7 @@ public class UserEditTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
+                .makePostRequest(DEV_BASE_URL + LOGIN_ENDPOINT, authData);
 
         String header = this.getHeader(responseAuthData, "x-csrf-token");
         String cookie = this.getCookie(responseAuthData, "auth_sid");
@@ -218,7 +214,7 @@ public class UserEditTest extends BaseTestCase {
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newName);
         Response responseEditUser = apiCoreRequests
-                .makePutRequest(URLtest + APIDEVUserUrl + userId, header, cookie, editData);
+                .makePutRequest(DEV_BASE_URL + USER_ENDPOINT + userId, header, cookie, editData);
 
         Assertions.assertJsonHasField(responseEditUser, "error");
         Assertions.assertJsonByName(responseEditUser, "error", "The value for field `firstName` is too short");
