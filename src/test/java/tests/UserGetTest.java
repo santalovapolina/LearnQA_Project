@@ -1,11 +1,10 @@
 package tests;
 
 import io.qameta.allure.*;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import lib.ApiCoreRequests;
-import lib.Assertions;
-import lib.BaseTestCase;
-import lib.DataGenerator;
+import lib.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,12 @@ public class UserGetTest extends BaseTestCase {
     String loginUrl = "https://playground.learnqa.ru/api/user/login";
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.baseURI = Constants.URLtest;
+    }
 
     @Test
     @Severity(SeverityLevel.NORMAL)

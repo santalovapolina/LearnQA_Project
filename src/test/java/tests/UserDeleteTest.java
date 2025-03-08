@@ -1,11 +1,10 @@
 package tests;
 
 import io.qameta.allure.*;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import lib.ApiCoreRequests;
-import lib.Assertions;
-import lib.BaseTestCase;
-import lib.DataGenerator;
+import lib.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,21 +12,22 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static lib.Constants.*;
+
 @Epic("Delete user cases")
 @Feature("User deletion")
 public class UserDeleteTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
-    String deleteUrl = "https://playground.learnqa.ru/api/user/";
-
-    String userUrl = "https://playground.learnqa.ru/api/user/";
-
-    String loginUrl = "https://playground.learnqa.ru/api/user/login";
-
     String cookie;
     String headers;
     int userId;
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.baseURI = Constants.URLtest;
+    }
 
     @Test
     @Severity(SeverityLevel.NORMAL)
@@ -42,14 +42,14 @@ public class UserDeleteTest extends BaseTestCase {
         authData.put("password", "1234");
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(loginUrl, authData);
+                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
         this.cookie = this.getCookie(responseAuthData, "auth_sid");
         this.headers = this.getHeader(responseAuthData, "x-csrf-token");
         this.userId = this.getIntFromJson(responseAuthData, "user_id");
 
         //Удаление пользователя
         Response responseCheckDelete = apiCoreRequests
-                .makeDeleteRequest(deleteUrl + userId, this.headers, this.cookie);
+                .makeDeleteRequest(URLtest + APIDEVUserUrl + userId, this.headers, this.cookie);
 
         Assertions.assertJsonHasField(responseCheckDelete, "error");
         Assertions.assertJsonByName(responseCheckDelete, "error", "Please, do not delete test users with ID 1, 2, 3, 4 or 5.");
@@ -70,12 +70,12 @@ public class UserDeleteTest extends BaseTestCase {
         userData = DataGenerator.getRegistrationData(userData);
 
         Response response = apiCoreRequests
-                .makePostRequest(userUrl, userData);
+                .makePostRequest(URLtest + APIDEVUserUrl, userData);
         String userId = response.jsonPath().get("id");
 
         //Авторизация пользователя
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(loginUrl, userData);
+                .makePostRequest(URLtest + APIDEVLoginUrl, userData);
         this.cookie = this.getCookie(responseAuthData, "auth_sid");
         this.headers = this.getHeader(responseAuthData, "x-csrf-token");
         this.userId = this.getIntFromJson(responseAuthData, "user_id");
@@ -83,11 +83,11 @@ public class UserDeleteTest extends BaseTestCase {
 
         //Удаление пользователя
         Response responseCheckDelete = apiCoreRequests
-                .makeDeleteRequest(deleteUrl + userId, this.headers, this.cookie);
+                .makeDeleteRequest(URLtest + APIDEVUserUrl + userId, this.headers, this.cookie);
 
         //Повторная авторизация пользователя
         Response responseAuthAfterDeletion = apiCoreRequests
-                .makePostRequest(loginUrl, userData);
+                .makePostRequest(URLtest + APIDEVLoginUrl, userData);
         this.cookie = this.getCookie(responseAuthData, "auth_sid");
         this.headers = this.getHeader(responseAuthData, "x-csrf-token");
         this.userId = this.getIntFromJson(responseAuthData, "user_id");
@@ -111,7 +111,7 @@ public class UserDeleteTest extends BaseTestCase {
         firstUserData = DataGenerator.getRegistrationData(firstUserData);
 
         Response responseFirstUser = apiCoreRequests
-                .makePostRequest(userUrl, firstUserData);
+                .makePostRequest(URLtest + APIDEVUserUrl, firstUserData);
 
         String firstUserId = responseFirstUser.jsonPath().get("id");
 
@@ -120,7 +120,7 @@ public class UserDeleteTest extends BaseTestCase {
         secondUserData = DataGenerator.getRegistrationData(secondUserData);
 
         Response responseSecondUser = apiCoreRequests
-                .makePostRequest(userUrl, secondUserData);
+                .makePostRequest(URLtest + APIDEVUserUrl, secondUserData);
 
         String secondUserId = responseSecondUser.jsonPath().get("id");
 
@@ -131,7 +131,7 @@ public class UserDeleteTest extends BaseTestCase {
         authData.put("password", firstUserData.get("password"));
 
         Response responseAuthData = apiCoreRequests
-                .makePostRequest(loginUrl, authData);
+                .makePostRequest(URLtest + APIDEVLoginUrl, authData);
 
         this.headers = this.getHeader(responseAuthData, "x-csrf-token");
         this.cookie = this.getCookie(responseAuthData, "auth_sid");
@@ -139,8 +139,9 @@ public class UserDeleteTest extends BaseTestCase {
 
         //Удаление пользователя
         Response responseCheckDelete = apiCoreRequests
-                .makeDeleteRequest(deleteUrl + secondUserId, this.headers, this.cookie);
+                .makeDeleteRequest(URLtest + APIDEVUserUrl + secondUserId, this.headers, this.cookie);
 
+        System.out.println(responseCheckDelete);
         Assertions.assertJsonHasField(responseCheckDelete, "error");
         Assertions.assertJsonByName(responseCheckDelete, "error", "This user can only delete their own account.");
 
